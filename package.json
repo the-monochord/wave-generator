@@ -1,0 +1,22 @@
+{
+  "name": "wave-generator",
+  "version": "0.0.0",
+  "description": "A set of tools, which generate and transform waves for WebAudioAPI components",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/the-monochord/wave-generator.git"
+  },
+  "author": "Lajos Meszaros <m_lajos@hotmail.com>",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/the-monochord/wave-generator/issues"
+  },
+  "homepage": "https://github.com/the-monochord/wave-generator#readme",
+  "dependencies": {
+    "ramda": "^0.26.1"
+  }
+}
