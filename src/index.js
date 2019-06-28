@@ -42,10 +42,10 @@ class Wave {
     const frequency = new Param(440)
 
     phase.on('change', () => {
-      // phase changed, regenerate this._.waveform and set it for this._.oscillator
+      // TODO: regenerate this._.waveform and set it for this._.oscillator
     })
     offset.on('change', () => {
-      // offset changed, adjust this._.offset
+      // TODO: change this._.offset's value
     })
 
     const waveform = createWave(phase.value, ctx)
