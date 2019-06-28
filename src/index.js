@@ -1,4 +1,6 @@
 import { memoizeWith, modulo } from 'ramda'
+import EventEmitter from 'eventemitter3'
+
 const roundToNDecimals = curry((decimals, number) => Math.round(number * 10 ** decimals) / 10 ** decimals)
 
 const createWave = memoizeWith(
@@ -17,24 +19,76 @@ const createWave = memoizeWith(
   }
 )
 
-const ctx = new OfflineAudioContext(1, 44100 * 2, 44100)
+class Param extends EventEmitter {
+  constructor (value) {
+    super()
+    this._ = {
+      value
+    }
+  }
+  get value () {
+    return this._.value
+  }
+  set value (newValue) {
+    this._.value = newValue
+    this.emit('change', newValue)
+  }
+}
 
-const OFFSET = 0.7
-const PHASE = 0.35
+class Wave {
+  constructor(ctx) {
+    const phase = new Param(0)
+    const offset = new Param(0)
+    const frequency = new Param(440)
 
-const wave = createWave(PHASE, ctx)
+    phase.on('change', () => {
+      // phase changed, regenerate this._.waveform and set it for this._.oscillator
+    })
+    offset.on('change', () => {
+      // offset changed, adjust this._.offset
+    })
 
-const oscillator = ctx.createOscillator()
-oscillator.frequency.value = 400
-oscillator.setPeriodicWave(wave)
+    const waveform = createWave(phase.value, ctx)
+    
+    const oscillator = ctx.createOscillator()
+    oscillator.frequency.value = frequency.value
+    oscillator.setPeriodicWave(waveform)
 
-const offset = ctx.createConstantSource()
-offset.offset.value = OFFSET
+    const offset = ctx.createConstantSource()
+    offset.offset.value = offset.value
 
-oscillator.connect(ctx.destination)
-offset.connect(ctx.destination)
+    this.phase = phase
+    this.offset = offset
+    this.frequency = frequency
 
-// ---------- start
+    this._ = {
+      ctx,
+      waveform,
+      oscillator,
+      offset
+    }
+  }
 
-oscillator.start()
-offset.start()
+  start(when) {
+    const { oscillator, offset } = this._
+
+    oscillator.start(when)
+    offset.start(when)
+  }
+
+  stop(when) {
+    const { oscillator, offset } = this._
+
+    oscillator.stop(when)
+    offset.stop(when)
+  }
+
+  connect(target) {
+    const { oscillator, offset } = this._
+
+    oscillator.connect(target)
+    offset.connect(target)
+  }
+}
+
+export default Wave
