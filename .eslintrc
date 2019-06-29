@@ -16,6 +16,7 @@
         "printWidth": 120
       }
     ],
+    "space-before-function-paren": "off",
     "no-var": "error",
     "prefer-const": "error",
     "import/no-unresolved": "error",
