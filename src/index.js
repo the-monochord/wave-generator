@@ -1,4 +1,4 @@
-import { memoizeWith, modulo } from 'ramda'
+import { memoizeWith, modulo, curry } from 'ramda'
 import EventEmitter from 'eventemitter3'
 
 const roundToNDecimals = curry((decimals, number) => Math.round(number * 10 ** decimals) / 10 ** decimals)
@@ -20,16 +20,16 @@ const createWave = memoizeWith(
 )
 
 class Param extends EventEmitter {
-  constructor (value) {
+  constructor(value) {
     super()
     this._ = {
       value
     }
   }
-  get value () {
+  get value() {
     return this._.value
   }
-  set value (newValue) {
+  set value(newValue) {
     this._.value = newValue
     this.emit('change', newValue)
   }
@@ -49,13 +49,13 @@ class Wave {
     })
 
     const waveform = createWave(phase.value, ctx)
-    
+
     const oscillator = ctx.createOscillator()
     oscillator.frequency.value = frequency.value
     oscillator.setPeriodicWave(waveform)
 
-    const offset = ctx.createConstantSource()
-    offset.offset.value = offset.value
+    const constantSource = ctx.createConstantSource()
+    constantSource.offset.value = offset.value
 
     this.phase = phase
     this.offset = offset
@@ -65,29 +65,29 @@ class Wave {
       ctx,
       waveform,
       oscillator,
-      offset
+      constantSource
     }
   }
 
   start(when) {
-    const { oscillator, offset } = this._
+    const { oscillator, constantSource } = this._
 
     oscillator.start(when)
-    offset.start(when)
+    constantSource.start(when)
   }
 
   stop(when) {
-    const { oscillator, offset } = this._
+    const { oscillator, constantSource } = this._
 
     oscillator.stop(when)
-    offset.stop(when)
+    constantSource.stop(when)
   }
 
   connect(target) {
-    const { oscillator, offset } = this._
+    const { oscillator, constantSource } = this._
 
     oscillator.connect(target)
-    offset.connect(target)
+    constantSource.connect(target)
   }
 }
 

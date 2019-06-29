@@ -4,8 +4,19 @@
   "description": "A set of tools, which generate and transform waves for WebAudioAPI components",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run lint:js",
+    "lint:js": "eslint \"src/**/*.js\"",
+    "lint-staged": "lint-staged"
   },
+  "lint-staged": {
+    "src/**/*.jsx": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "pre-commit": [
+    "lint-staged"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/the-monochord/wave-generator.git"
@@ -19,5 +30,21 @@
   "dependencies": {
     "eventemitter3": "^4.0.0",
     "ramda": "^0.26.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.2",
+    "eslint": "^6.0.1",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-config-prettier-standard": "^3.0.1",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-ramda": "^2.5.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "lint-staged": "^8.2.1",
+    "pre-commit": "^1.2.2",
+    "prettier": "^1.18.2"
   }
 }
