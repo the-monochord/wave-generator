@@ -33,6 +33,14 @@ class Param extends EventEmitter {
     this._.value = newValue
     this.emit('change', newValue)
   }
+
+  setValueAtTime(value, startTime) {}
+  linearRampToValueAtTime(value, endTime) {}
+  exponentialRampToValueAtTime(value, endTime) {}
+  setTargetAtTime(target, startTime, timeConstant) {}
+  setValueCurveAtTime(value, startTime) {}
+  cancelScheduledValues(startTime) {}
+  cancelAndHoldAtTime(cancelTime) {}
 }
 
 class Wave {
@@ -42,10 +50,11 @@ class Wave {
     const frequency = new Param(440)
 
     phase.on('change', () => {
-      // TODO: regenerate this._.waveform and set it for this._.oscillator
+      const waveform = createWave(this._.phase.value, ctx)
+      this._.oscillator.setPeriodicWave(waveform)
     })
     offset.on('change', () => {
-      // TODO: change this._.offset's value
+      this._.constantSource.offset.value = this._.offset.value
     })
 
     const waveform = createWave(phase.value, ctx)
